@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+:root{
+--font-display:'Space Grotesk',sans-serif;
+--font-body:'IBM Plex Sans',sans-serif;
+--font-mono:'IBM Plex Mono',monospace;
+--text-h1:52px;
+--text-h2:38px;
+--text-h3:28px;
+--text-body-lg:24px;
+--text-body-md:18px;
+--text-body-sm:16px;
+--text-mono-md:18px;
+--text-mono-sm:15px;
+--leading-tight:1.2;
+--leading-normal:1.5;
+--leading-relaxed:1.7;
+--tracking-eyebrow:0.14em;
+}
