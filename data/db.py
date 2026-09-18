@@ -40,9 +40,13 @@ ENV_TOKEN = "DATABRICKS_TOKEN"  # em produção, o app usa o token do próprio s
 
 
 def _score_tone(pct: float) -> str:
-    if pct >= 85:
+    # Alinhado com o painel gerencial atual do time: verde só para acerto
+    # perfeito (100%), azul para o restante da faixa de aprovação, vermelho
+    # abaixo de 50%. Ver docs/index.html e docs/gerencial.html para a versão
+    # já publicada com esse critério.
+    if pct >= 100:
         return "high"
-    if pct >= 60:
+    if pct >= 50:
         return "mid"
     return "low"
 
