@@ -1,0 +1,9 @@
+command: ["python", "app.py"]
+
+env:
+  - name: "FLASK_ENV"
+      value: "production"
+
+      # Depois de anexar um SQL Warehouse ao app (aba "Resources" na tela do app no
+      # workspace), confira quais env vars o Databricks injeta e ajuste, se preciso,
+      # as constantes ENV_HOSTNAME / ENV_HTTP_PATH / ENV_TOKEN em data/db.py.
