@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resultado de avaliação de candidato{% if candidate %} — {{ candidate.nome }}{% endif %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/report.css') }}">
+</head>
+<body>
+<div class="report-header">
+  <div class="brand">
+    <img src="{{ url_for('static', filename='img/miner-logo-branco.svg') }}" alt="Miner">
+  </div>
+  <div>
+    <div class="eyebrow">Testdome &middot; Avaliação técnica</div>
+    <div class="title">Resultado de avaliação de candidato</div>
+  </div>
+</div>
+
+<div class="page">
+
+{% if not candidate %}
+  <div class="empty-state">
+    <p>Nenhum candidato selecionado. Use <code>?candidate_id=...&test_id=...</code> na URL, ou escolha um na lista.</p>
+  </div>
+{% else %}
+
+  <div class="id-row">
+    <div class="id-block">
+      <p class="eyebrow">Candidato</p>
+      <p class="name">{{ candidate.nome }}</p>
+    </div>
+    <div class="id-block align-right">
+      <p class="eyebrow">Avaliação</p>
+      <p class="name">{{ candidate.nome_teste }}</p>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="card">
+      <p class="label">Percentual de acerto</p>
+      <p class="value">
+        <span class="pill {{ candidate.percentual_tone }}">{{ candidate.percentual_geral }}%</span>
+      </p>
+    </div>
+    <div class="card">
+      <p class="label">Data da avaliação</p>
+      <p class="value" style="font-size: var(--text-h3);">{{ candidate.data_avaliacao or '—' }}</p>
+    </div>
+    <div class="card">
+      <p class="label">Tempo de prova</p>
+      <p class="value" style="font-size: var(--text-h3);">{{ candidate.tempo_prova or '—' }}</p>
+    </div>
+  </div>
+
+  <p class="section-title">Resumo por conhecimento técnico</p>
+  <div class="skill-row">
+    {% for skill in candidate.resumo_skills %}
+    <div class="skill-card">
+      <div class="top">
+        <span class="skill-name">{{ skill.nome }}</span>
+        <span class="skill-pct">{{ skill.percentual }}%</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill {{ skill.tone }}" style="width: {{ skill.percentual }}%;"></div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <p class="section-title">Detalhamento por pergunta</p>
+  <div class="table-wrap">
+    <table class="detail">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Conhecimento técnico</th>
+          <th>Pergunta</th>
+          <th>Senioridade</th>
+          <th>Tipo de pergunta</th>
+          <th>Peso</th>
+          <th>Pontuação</th>
+          <th>Observação</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in candidate.detalhamento %}
+        <tr>
+          <td>{{ row.ordem }}</td>
+          <td>{{ row.conhecimento }}</td>
+          <td>{{ row.pergunta }}</td>
+          <td>{{ row.senioridade }}</td>
+          <td>{{ row.tipo }}</td>
+          <td>{{ row.peso }}%</td>
+          <td class="score {{ row.score_tone }}">{{ row.pontuacao }}%</td>
+          <td>{{ row.observacao or '' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <p class="footnote">Essa avaliação não substitui qualquer entrevista feita ou a ser realizada.</p>
+
+{% endif %}
+
+</div>
+</body>
+</html>
