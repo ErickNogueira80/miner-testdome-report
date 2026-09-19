@@ -10,26 +10,26 @@
 
 <div class="report-header">
   <div class="brand"><img src="static/img/miner-logo-branco.svg" alt="Miner"></div>
-  <div>
-    <div class="eyebrow">Testdome &middot; Avaliação técnica</div>
+  <div class="title-block">
+    <div class="eyebrow">Avaliação técnica</div>
     <div class="title">Resultado de avaliação de candidato</div>
   </div>
 </div>
-<div class="subnav">
-  <a href="index.html" class="active">Avaliações individuais</a>
-  <a href="gerencial.html" class="">Painel gerencial</a>
-</div>
 
-<div class="page">
-<div class="layout">
-  <aside class="filter-panel">
+<div class="shell">
+  <aside class="side-nav">
+    <nav class="side-nav-links">
+      <a href="index.html" class="side-nav-link active">Avaliações individuais</a>
+      <a href="gerencial.html" class="side-nav-link">Painel gerencial</a>
+    </nav>
+    <hr class="side-nav-divider">
     <p class="filter-title">Nome do candidato</p>
     <input type="text" id="candidate-search" class="filter-search" placeholder="Pesquisar">
     <select id="candidate-select" class="filter-select"></select>
     <p class="filter-empty" id="filter-empty" style="display:none;">Nenhum candidato encontrado.</p>
   </aside>
 
-  <div class="main-col">
+  <div class="page">
     <div class="toolbar">
       <button type="button" id="print-btn" class="btn-print">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -44,7 +44,6 @@
       <p class="footnote">Carregando dados...</p>
     </div>
   </div>
-</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
@@ -91,7 +90,7 @@
         '<div class="id-block align-right"><p class="eyebrow">Avaliação</p><p class="name">' + escapeHtml(c.nome_teste) + '</p></div>' +
       '</div>' +
       '<div class="stat-row">' +
-        '<div class="card"><p class="label">Percentual de acerto</p><p class="value"><span class="pill ' + c.percentual_tone + '">' + c.percentual_geral + '%</span></p></div>' +
+        '<div class="card"><p class="label">Percentual de acerto</p><p class="value"><span class="pill pill-lg ' + c.percentual_tone + '">' + c.percentual_geral + '%</span></p></div>' +
         '<div class="card"><p class="label">Data da avaliação</p><p class="value" style="font-size: var(--text-h3);">' + escapeHtml(c.data_avaliacao) + '</p></div>' +
         '<div class="card"><p class="label">Tempo de prova</p><p class="value" style="font-size: var(--text-h3);">' + escapeHtml(c.tempo_prova) + '</p></div>' +
       '</div>' +
