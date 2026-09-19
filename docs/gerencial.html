@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Painel gerencial — Testdome</title>
-<link rel="stylesheet" href="static/css/report.css?v=2">
+<link rel="stylesheet" href="static/css/report.css?v=3">
 </head>
 <body>
 
@@ -19,8 +19,8 @@
 <div class="shell">
   <aside class="side-nav">
     <nav class="side-nav-links">
-      <a href="index.html" class="side-nav-link">Avaliações individuais</a>
       <a href="gerencial.html" class="side-nav-link active">Painel gerencial</a>
+      <a href="index.html" class="side-nav-link">Avaliações individuais</a>
     </nav>
   </aside>
 
@@ -48,7 +48,7 @@
       '<div class="kpi-row">' +
         '<div class="card"><p class="label">Candidatos avaliados</p><p class="value">' + kpi.candidatos_avaliados + '</p></div>' +
         '<div class="card"><p class="label">Avaliações disponíveis</p><p class="value">' + kpi.avaliacoes_disponiveis + '</p></div>' +
-        '<div class="card"><p class="label">Pontuação média</p><p class="value"><span class="pill ' + scoreTone(kpi.pontuacao_media) + '">' + kpi.pontuacao_media + '%</span></p></div>' +
+        '<div class="card"><p class="label">Pontuação média</p><p class="value"><span class="pill pill-lg ' + scoreTone(kpi.pontuacao_media) + '">' + kpi.pontuacao_media + '%</span></p></div>' +
         '<div class="card"><p class="label">Avaliações por IA</p><p class="value">' + kpi.avaliacoes_ia + '</p></div>' +
         '<div class="card"><p class="label">Tempo médio de avaliação</p><p class="value" style="font-size: var(--text-h3);">' + kpi.tempo_medio + '</p></div>' +
       '</div>' +
