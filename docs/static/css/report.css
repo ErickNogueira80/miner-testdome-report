@@ -55,12 +55,12 @@ a:hover { color: var(--link-hover); }
   text-align: left;
 }
 
-/* Shell: fixed side nav (left) + report content (right), divided by a border */
+/* Shell: fixed side nav (left) + report content (right), divided by a border.
+ * No max-width/centering here on purpose: the side nav must sit flush against
+ * the left edge of the viewport, with no gutter before it. */
 .shell {
   display: flex;
   align-items: flex-start;
-  max-width: var(--container-max);
-  margin: 0 auto;
 }
 
 .side-nav {
@@ -109,6 +109,8 @@ a:hover { color: var(--link-hover); }
 .page {
   flex: 1;
   min-width: 0;
+  max-width: var(--container-max);
+  margin: 0 auto;
   padding: var(--space-5) var(--space-4) var(--space-7);
 }
 
@@ -392,6 +394,8 @@ table.detail td.score.low  { background: var(--state-error-tint);   color: var(-
   border: 1px solid var(--border-default);
   border-radius: var(--radius-lg);
   padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
 }
 
 .chart-card .chart-title {
@@ -401,9 +405,13 @@ table.detail td.score.low  { background: var(--state-error-tint);   color: var(-
   color: var(--text-muted);
   text-transform: uppercase;
   margin: 0 0 var(--space-3);
+  flex: none;
 }
 
-.chart-card svg { display: block; width: 100%; height: auto; overflow: visible; }
+/* O card estica para acompanhar a altura do vizinho na mesma linha do grid;
+ * o gráfico preenche esse espaço em vez de ficar ancorado no topo com uma
+ * sobra de espaço em branco abaixo/à direita. */
+.chart-card svg { display: block; width: 100%; height: 100%; flex: 1; min-height: 0; overflow: visible; }
 
 .chart-card .bar-value { font-family: var(--font-mono); font-size: 12px; fill: var(--text-heading); font-weight: 500; }
 .chart-card .bar-label { font-family: var(--font-body); font-size: 12px; fill: var(--text-body); }
@@ -418,7 +426,7 @@ table.detail td.score.low  { background: var(--state-error-tint);   color: var(-
 /* Impressão: mostra só o resultado do candidato selecionado */
 @media print {
   .report-header, .side-nav, .toolbar { display: none !important; }
-  .shell { display: block; max-width: none; }
-  .page { padding: 0; }
+  .shell { display: block; }
+  .page { padding: 0; max-width: none; }
   .card, .skill-card, .table-wrap { break-inside: avoid; }
 }
