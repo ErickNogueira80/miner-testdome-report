@@ -266,9 +266,14 @@ a:hover { color: var(--link-hover); }
 .pill.warning             { background: var(--state-warning-tint); color: var(--state-warning-text); }
 .pill.error,   .pill.low  { background: var(--state-error-tint);   color: var(--state-error-text); }
 
-/* Pill maior, usada no card "Percentual de acerto" para casar com o tamanho
- * de fonte dos demais cards da stat-row (data da avaliação / tempo de prova). */
+/* Pill usada nos valores de cards de stat/KPI (Percentual de acerto,
+ * Pontuação média). Usa a mesma fonte/peso dos demais valores (.card .value)
+ * em vez da fonte mono padrão do .pill: no mesmo tamanho em px, a IBM Plex
+ * Mono/500 tem corpo visualmente menor que a Space Grotesk/700, então só
+ * igualar o font-size não bastava para os valores parecerem do mesmo tamanho. */
 .pill.pill-lg {
+  font-family: var(--font-display);
+  font-weight: 700;
   font-size: var(--text-h3);
   padding: 2px 14px;
 }
