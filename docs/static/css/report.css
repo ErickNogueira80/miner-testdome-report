@@ -84,10 +84,10 @@ a:hover { color: var(--link-hover); }
   border-bottom-color: var(--color-ciano);
 }
 
-/* Layout: main content + filter sidebar */
+/* Layout: filter sidebar (left) + main content */
 .layout {
   display: grid;
-  grid-template-columns: 1fr 280px;
+  grid-template-columns: 280px 1fr;
   gap: var(--space-4);
   align-items: start;
   padding-top: var(--space-5);
@@ -96,6 +96,31 @@ a:hover { color: var(--link-hover); }
 @media (max-width: 860px) {
   .layout { grid-template-columns: 1fr; }
 }
+
+/* Toolbar above the report body (print action, etc.) */
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: var(--space-3);
+}
+
+.btn-print {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--text-body-sm);
+  color: var(--text-body);
+  cursor: pointer;
+}
+
+.btn-print:hover { background: var(--neutral-50); border-color: var(--color-azul); color: var(--color-azul); }
+.btn-print svg { width: 16px; height: 16px; flex: none; }
 
 /* Candidate filter panel */
 .filter-panel {
@@ -130,34 +155,19 @@ a:hover { color: var(--link-hover); }
 
 .filter-panel .filter-search:focus { outline: none; border-color: var(--color-azul); }
 
-.filter-panel .filter-list {
-  max-height: 420px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.filter-panel .filter-item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
+.filter-panel .filter-select {
+  width: 100%;
   padding: var(--space-2);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
   font-size: var(--text-body-sm);
   color: var(--text-body);
+  background: var(--surface-card);
+  cursor: pointer;
 }
 
-.filter-panel .filter-item:hover { background: var(--neutral-50); }
-
-.filter-panel .filter-item input { accent-color: var(--color-azul); width: 16px; height: 16px; flex: none; }
-
-.filter-panel .filter-item.selected {
-  background: var(--state-info-tint);
-  color: var(--state-info-text);
-  font-weight: 500;
-}
+.filter-panel .filter-select:focus { outline: none; border-color: var(--color-azul); }
 
 .filter-panel .filter-empty {
   padding: var(--space-3);
@@ -393,3 +403,11 @@ table.detail td.score.low  { background: var(--state-error-tint);   color: var(-
 .chart-card .line-path { fill: none; stroke: var(--color-azul); stroke-width: 2; }
 .chart-card .area-path { fill: var(--state-info-tint); }
 .chart-card .dot { fill: var(--color-azul); }
+
+/* Impressão: mostra só o resultado do candidato selecionado */
+@media print {
+  .report-header, .subnav, .filter-panel, .toolbar { display: none !important; }
+  .layout { display: block; }
+  .page { max-width: none; padding: 0; }
+  .card, .skill-card, .table-wrap { break-inside: avoid; }
+}
