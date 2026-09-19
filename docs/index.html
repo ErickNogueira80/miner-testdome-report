@@ -22,17 +22,28 @@
 
 <div class="page">
 <div class="layout">
-  <div class="main-col" id="candidate-main">
-    <p class="footnote">Carregando dados...</p>
-  </div>
-
   <aside class="filter-panel">
     <p class="filter-title">Nome do candidato</p>
     <input type="text" id="candidate-search" class="filter-search" placeholder="Pesquisar">
-    <div class="filter-list" id="filter-list"></div>
+    <select id="candidate-select" class="filter-select"></select>
     <p class="filter-empty" id="filter-empty" style="display:none;">Nenhum candidato encontrado.</p>
-    <label class="filter-note"><input type="checkbox" checked disabled> Requer seleção única</label>
   </aside>
+
+  <div class="main-col">
+    <div class="toolbar">
+      <button type="button" id="print-btn" class="btn-print">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 6 2 18 2 18 9"></polyline>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect x="6" y="14" width="12" height="8"></rect>
+        </svg>
+        Imprimir
+      </button>
+    </div>
+    <div id="candidate-main">
+      <p class="footnote">Carregando dados...</p>
+    </div>
+  </div>
 </div>
 </div>
 
@@ -99,50 +110,60 @@
   function selectCandidate(id) {
     var c = candidates.find(function (x) { return String(x.id) === String(id); });
     if (!c) return;
-    document.querySelectorAll(".filter-item").forEach(function (it) {
-      it.classList.toggle("selected", String(it.dataset.id) === String(id));
-    });
     document.getElementById("candidate-main").innerHTML = renderCandidateBody(c);
     document.title = "Resultado de avaliação de candidato — " + c.nome;
   }
 
-  function renderFilterList(list) {
-    var container = document.getElementById("filter-list");
-    container.innerHTML = list.map(function (c) {
-      return (
-        '<label class="filter-item" data-id="' + c.id + '" data-name="' + escapeHtml(c.nome) + '">' +
-        '<input type="radio" name="candidato" value="' + c.id + '">' +
-        escapeHtml(c.nome) +
-        '</label>'
-      );
+  /** Reconstrói as opções do <select> a partir de uma lista (já filtrada pela busca).
+   * Mantém o candidato atualmente selecionado se ele ainda estiver na lista;
+   * caso contrário, seleciona o primeiro resultado. Retorna o id escolhido,
+   * ou null se a lista estiver vazia. */
+  function populateSelect(list, preserveId) {
+    var select = document.getElementById("candidate-select");
+    var emptyMsg = document.getElementById("filter-empty");
+
+    if (!list.length) {
+      select.innerHTML = "";
+      select.style.display = "none";
+      emptyMsg.style.display = "";
+      return null;
+    }
+
+    select.style.display = "";
+    emptyMsg.style.display = "none";
+    select.innerHTML = list.map(function (c) {
+      return '<option value="' + c.id + '">' + escapeHtml(c.nome) + '</option>';
     }).join("");
-    container.querySelectorAll(".filter-item").forEach(function (it) {
-      it.addEventListener("click", function () { selectCandidate(it.dataset.id); });
-    });
+
+    var keep = preserveId != null && list.some(function (c) { return String(c.id) === String(preserveId); });
+    var chosenId = keep ? preserveId : list[0].id;
+    select.value = String(chosenId);
+    return chosenId;
   }
 
-  function wireSearch() {
+  function wireControls() {
     var search = document.getElementById("candidate-search");
-    var emptyMsg = document.getElementById("filter-empty");
+    var select = document.getElementById("candidate-select");
+
     search.addEventListener("input", function () {
       var q = search.value.trim().toLowerCase();
-      var any = false;
-      document.querySelectorAll(".filter-item").forEach(function (it) {
-        var match = it.dataset.name.toLowerCase().indexOf(q) !== -1;
-        it.style.display = match ? "" : "none";
-        if (match) any = true;
-      });
-      emptyMsg.style.display = any ? "none" : "";
+      var filtered = candidates.filter(function (c) { return c.nome.toLowerCase().indexOf(q) !== -1; });
+      var chosenId = populateSelect(filtered, select.value);
+      if (chosenId != null) selectCandidate(chosenId);
     });
+
+    select.addEventListener("change", function () { selectCandidate(select.value); });
+
+    document.getElementById("print-btn").addEventListener("click", function () { window.print(); });
   }
 
   async function init() {
     try {
       var rows = await loadRows();
       candidates = buildCandidates(rows);
-      renderFilterList(candidates);
-      wireSearch();
-      if (candidates.length) selectCandidate(candidates[0].id);
+      wireControls();
+      var chosenId = populateSelect(candidates, null);
+      if (chosenId != null) selectCandidate(chosenId);
       else document.getElementById("candidate-main").innerHTML = '<p class="footnote">Nenhum candidato encontrado no CSV.</p>';
     } catch (err) {
       document.getElementById("candidate-main").innerHTML = '<p class="footnote">Erro ao carregar dados: ' + escapeHtml(err.message) + '</p>';
