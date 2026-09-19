@@ -126,18 +126,16 @@ a:hover { color: var(--link-hover); }
   }
 }
 
-/* Toolbar above the report body (print action, etc.) */
-.toolbar {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: var(--space-3);
-}
-
+/* Botão de impressão, agora dentro do .side-nav, logo abaixo do candidato
+ * selecionado — ocupa a largura toda para casar com busca/seleção. */
 .btn-print {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--space-2);
+  width: 100%;
   padding: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-3);
   background: var(--surface-card);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
@@ -245,10 +243,12 @@ a:hover { color: var(--link-hover); }
   margin: 0 0 var(--space-2);
 }
 
+/* Tamanho único para o valor de todos os cards de stat/KPI (pill ou texto
+ * simples), igual ao do card "Tempo médio de avaliação". */
 .card .value {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: var(--text-h2);
+  font-size: var(--text-h3);
   color: var(--text-heading);
   margin: 0;
 }
@@ -425,7 +425,7 @@ table.detail td.score.low  { background: var(--state-error-tint);   color: var(-
 
 /* Impressão: mostra só o resultado do candidato selecionado */
 @media print {
-  .report-header, .side-nav, .toolbar { display: none !important; }
+  .report-header, .side-nav { display: none !important; }
   .shell { display: block; }
   .page { padding: 0; max-width: none; }
   .card, .skill-card, .table-wrap { break-inside: avoid; }
