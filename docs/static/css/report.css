@@ -183,6 +183,7 @@ a:hover { color: var(--link-hover); }
   color: var(--text-body);
   background: var(--surface-card);
   cursor: pointer;
+  margin-bottom: var(--space-4);
 }
 
 .side-nav .filter-select:focus { outline: none; border-color: var(--color-azul); }
