@@ -463,7 +463,7 @@ table.detail td.score.low  { background: var(--state-error-tint);   color: var(-
   .stat-row { gap: var(--space-2); margin-bottom: var(--space-2); }
   .card { padding: var(--space-2); }
   .card .label { font-size: 10px; margin-bottom: 2px; }
-  .card .value { font-size: 13px; }
+  .card .value { font-size: 12px; }
   .pill.pill-lg { font-size: 24px; padding: 2px 12px; }
 
   .section-title { font-size: 10px; margin: 0 0 var(--space-1); }
