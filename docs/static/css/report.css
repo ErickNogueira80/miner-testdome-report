@@ -458,13 +458,13 @@ table.detail td.score.low  { background: var(--state-error-tint);   color: var(-
   .id-block .eyebrow { font-size: 10px; margin-bottom: 2px; }
   .id-block .name { font-size: 20px; }
 
-  /* Card de "Percentual de acerto" é o dado principal da impressão: fica
-   * maior; data/tempo (metadados) ficam menores para dar mais hierarquia. */
+  /* Os três valores da stat-row (percentual, data, tempo) no mesmo tamanho
+   * na impressão. */
   .stat-row { gap: var(--space-2); margin-bottom: var(--space-2); }
   .card { padding: var(--space-2); }
   .card .label { font-size: 10px; margin-bottom: 2px; }
-  .card .value { font-size: 12px; }
-  .pill.pill-lg { font-size: 24px; padding: 2px 12px; }
+  .card .value { font-size: 16px; }
+  .pill.pill-lg { font-size: 16px; padding: 1px 10px; }
 
   .section-title { font-size: 10px; margin: 0 0 var(--space-1); }
   .skill-row { gap: var(--space-2); margin-bottom: var(--space-2); }
