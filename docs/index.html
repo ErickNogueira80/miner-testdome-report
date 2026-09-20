@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Resultado de avaliação de candidato</title>
-<link rel="stylesheet" href="static/css/report.css?v=11">
+<link rel="stylesheet" href="static/css/report.css?v=12">
 </head>
 <body>
 
@@ -78,9 +78,8 @@
         '<td>' + escapeHtml(d.pergunta) + '</td>' +
         '<td>' + escapeHtml(d.senioridade) + '</td>' +
         '<td>' + escapeHtml(d.tipo) + '</td>' +
-        '<td>' + d.peso + '%</td>' +
-        '<td class="score ' + d.tone + '">' + d.pontuacao + '%</td>' +
-        '<td>' + escapeHtml(d.observacao) + '</td>' +
+        '<td class="num">' + d.peso + '%</td>' +
+        '<td class="score num ' + d.tone + '">' + d.pontuacao + '%</td>' +
         '</tr>'
       );
     }).join("");
@@ -101,7 +100,7 @@
       '<p class="section-title">Detalhamento por pergunta</p>' +
       '<div class="table-wrap"><table class="detail"><thead><tr>' +
         '<th>#</th><th>Conhecimento Técnico</th><th>Pergunta</th><th>Senioridade</th>' +
-        '<th>Tipo de Pergunta</th><th>Peso</th><th>Pontuação</th><th>Observação</th>' +
+        '<th>Tipo de Pergunta</th><th class="num">Peso</th><th class="num">Pontuação</th>' +
       '</tr></thead><tbody>' + rows + '</tbody></table></div>' +
       '<p class="footnote">Essa avaliação não substitui qualquer entrevista feita ou a ser realizada.</p>' +
       '</div>'
