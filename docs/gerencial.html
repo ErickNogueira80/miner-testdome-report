@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Painel gerencial — Testdome</title>
-<link rel="stylesheet" href="static/css/report.css?v=12">
+<link rel="stylesheet" href="static/css/report.css?v=13">
 </head>
 <body>
 
@@ -21,6 +21,11 @@
 </div>
 
 <div class="shell">
+  <button type="button" id="nav-toggle" class="nav-toggle" aria-label="Recolher menu" title="Recolher menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  </button>
   <aside class="side-nav">
     <nav class="side-nav-links">
       <a href="gerencial.html" class="side-nav-link active">Painel gerencial</a>
@@ -33,6 +38,7 @@
   </div>
 </div>
 
+<script src="static/js/nav-toggle.js?v=1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script src="static/js/testdome-data.js?v=3"></script>
 <script src="static/js/charts.js?v=2"></script>
