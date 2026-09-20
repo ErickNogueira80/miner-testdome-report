@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Resultado de avaliação de candidato</title>
-<link rel="stylesheet" href="static/css/report.css?v=8">
+<link rel="stylesheet" href="static/css/report.css?v=9">
 </head>
 <body>
 
@@ -93,8 +93,8 @@
       '</div>' +
       '<div class="stat-row">' +
         '<div class="card"><p class="label">Percentual de acerto</p><p class="value"><span class="pill pill-lg ' + c.percentual_tone + '">' + c.percentual_geral + '%</span></p></div>' +
-        '<div class="card"><p class="label">Data da avaliação</p><p class="value" style="font-size: var(--text-h3);">' + escapeHtml(c.data_avaliacao) + '</p></div>' +
-        '<div class="card"><p class="label">Tempo de prova</p><p class="value" style="font-size: var(--text-h3);">' + escapeHtml(c.tempo_prova) + '</p></div>' +
+        '<div class="card"><p class="label">Data da avaliação</p><p class="value">' + escapeHtml(c.data_avaliacao) + '</p></div>' +
+        '<div class="card"><p class="label">Tempo de prova</p><p class="value">' + escapeHtml(c.tempo_prova) + '</p></div>' +
       '</div>' +
       '<p class="section-title">Resumo por conhecimento técnico</p>' +
       '<div class="skill-row">' + skillRow + '</div>' +

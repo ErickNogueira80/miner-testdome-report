@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Painel gerencial — Testdome</title>
-<link rel="stylesheet" href="static/css/report.css?v=8">
+<link rel="stylesheet" href="static/css/report.css?v=9">
 </head>
 <body>
 
@@ -54,7 +54,7 @@
         '<div class="card"><p class="label">Avaliações disponíveis</p><p class="value">' + kpi.avaliacoes_disponiveis + '</p></div>' +
         '<div class="card"><p class="label">Pontuação média</p><p class="value"><span class="pill pill-lg ' + scoreTone(kpi.pontuacao_media) + '">' + kpi.pontuacao_media + '%</span></p></div>' +
         '<div class="card"><p class="label">Avaliações por IA</p><p class="value">' + kpi.avaliacoes_ia + '</p></div>' +
-        '<div class="card"><p class="label">Tempo médio de avaliação</p><p class="value" style="font-size: var(--text-h3);">' + kpi.tempo_medio + '</p></div>' +
+        '<div class="card"><p class="label">Tempo médio de avaliação</p><p class="value">' + kpi.tempo_medio + '</p></div>' +
       '</div>' +
       '<div class="chart-grid">' +
         '<div class="chart-card"><p class="chart-title">Avaliados por teste</p>' + horizontalBarSvg(avaliadosPorTeste, "") + '</div>' +
