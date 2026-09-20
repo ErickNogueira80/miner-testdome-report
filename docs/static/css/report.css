@@ -429,10 +429,40 @@ table.detail td.score.low  { background: var(--state-error-tint);   color: var(-
 .chart-card .area-path { fill: var(--state-info-tint); }
 .chart-card .dot { fill: var(--color-azul); }
 
-/* Impressão: mostra só o resultado do candidato selecionado */
+/* Impressão: mostra só o resultado do candidato selecionado, compactado para
+ * caber numa única página (paisagem, fontes/espaçamentos reduzidos e a
+ * tabela sem corte horizontal). */
 @media print {
+  @page { size: landscape; margin: 10mm; }
+
   .report-header, .side-nav { display: none !important; }
   .shell { display: block; }
   .page { padding: 0; max-width: none; }
-  .card, .skill-card, .table-wrap { break-inside: avoid; }
+  body { font-size: 11px; }
+
+  .id-row { padding: 0 0 var(--space-2); gap: var(--space-3); }
+  .id-block .eyebrow { font-size: 10px; margin-bottom: 2px; }
+  .id-block .name { font-size: 20px; }
+
+  .stat-row { gap: var(--space-2); margin-bottom: var(--space-2); }
+  .card { padding: var(--space-2); }
+  .card .label { font-size: 10px; margin-bottom: 2px; }
+  .card .value { font-size: 16px; }
+  .pill.pill-lg { font-size: 16px; padding: 1px 8px; }
+
+  .section-title { font-size: 10px; margin: 0 0 var(--space-1); }
+  .skill-row { gap: var(--space-2); margin-bottom: var(--space-2); }
+  .skill-card { padding: var(--space-1) var(--space-2); }
+
+  /* A tabela usava overflow-x:auto para telas estreitas; na impressão isso
+   * cortava as últimas colunas (Observação) em vez de mostrá-las. */
+  .table-wrap { overflow: visible; }
+  table.detail { font-size: 9px; }
+  table.detail thead th { padding: 3px 6px; white-space: normal; font-size: 9px; }
+  table.detail tbody td { padding: 3px 6px; }
+
+  .footnote { font-size: 9px; margin-top: var(--space-2); }
+
+  .card, .skill-card { break-inside: avoid; }
+  table.detail tbody tr { break-inside: avoid; }
 }
