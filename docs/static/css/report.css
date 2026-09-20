@@ -16,8 +16,18 @@ body {
 a { color: var(--link); text-decoration: none; }
 a:hover { color: var(--link-hover); }
 
+/* Altura real do .report-header (medida: ~116px com o padding/logo atuais).
+ * Usada para o header ficar fixo no topo ao rolar a página, e para o
+ * side-nav (também sticky) começar logo abaixo dele em vez de por baixo. */
+:root {
+  --header-h: 116px;
+}
+
 /* Header */
 .report-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   background: var(--surface-dark);
   color: var(--text-on-dark);
   padding: var(--space-4) var(--space-4);
@@ -65,11 +75,12 @@ a:hover { color: var(--link-hover); }
 
 .side-nav {
   position: sticky;
-  top: 0;
+  top: var(--header-h);
+  z-index: 10;
   align-self: flex-start;
   flex: none;
   width: 260px;
-  height: 100vh;
+  height: calc(100vh - var(--header-h));
   overflow-y: auto;
   background: var(--surface-card);
   border-right: 1px solid var(--border-default);
