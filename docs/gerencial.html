@@ -34,7 +34,7 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-<script src="static/js/testdome-data.js?v=2"></script>
+<script src="static/js/testdome-data.js?v=3"></script>
 <script src="static/js/charts.js?v=2"></script>
 <script>
 (function () {
@@ -55,6 +55,7 @@
         '<div class="card"><p class="label">Pontuação média</p><p class="value"><span class="pill pill-lg ' + scoreTone(kpi.pontuacao_media) + '">' + kpi.pontuacao_media + '%</span></p></div>' +
         '<div class="card"><p class="label">Avaliações por IA</p><p class="value">' + kpi.avaliacoes_ia + '</p></div>' +
         '<div class="card"><p class="label">Tempo médio de avaliação</p><p class="value">' + kpi.tempo_medio + '</p></div>' +
+        '<div class="card"><p class="label">Custo com IA (Anthropic)</p><p class="value">' + kpi.custo_ia + '</p></div>' +
       '</div>' +
       '<div class="chart-grid">' +
         '<div class="chart-card"><p class="chart-title">Avaliados por teste</p>' + horizontalBarSvg(avaliadosPorTeste, "") + '</div>' +
@@ -62,7 +63,9 @@
         '<div class="chart-card"><p class="chart-title">Pontuação por teste</p>' + verticalBarSvg(pontuacaoPorTeste, "%") + '</div>' +
         '<div class="chart-card"><p class="chart-title">Pontuação por conhecimento técnico</p>' + horizontalBarSvg(pontuacaoPorConhecimento, "%") + '</div>' +
       '</div>' +
-      '<p class="footnote">Dados agregados do TestDome, extraídos automaticamente do CSV publicado em docs/data/testdome_respostas.csv.</p>';
+      '<p class="footnote">Dados agregados do TestDome, extraídos automaticamente do CSV publicado em docs/data/testdome_respostas.csv.' +
+        (kpi.custo_ia_rastreado ? '' : ' O rastreamento de custo de IA (Anthropic) começou em 17/09/2026 — ainda não há avaliações por IA registradas a partir dessa data, por isso o custo aparece zerado.') +
+      '</p>';
 
     document.getElementById("page-content").innerHTML = html;
   }
