@@ -350,12 +350,16 @@ table.detail thead th {
   white-space: nowrap;
 }
 
+table.detail thead th.num { text-align: right; }
+
 table.detail tbody td {
   padding: var(--space-2) var(--space-3);
   border-bottom: 1px solid var(--border-subtle);
   color: var(--text-body);
   vertical-align: top;
 }
+
+table.detail tbody td.num { text-align: right; }
 
 table.detail tbody tr:last-child td { border-bottom: none; }
 
