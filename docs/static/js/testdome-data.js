@@ -36,6 +36,14 @@ async function loadRows() {
   if (!res.ok) throw new Error("Não foi possível carregar " + CSV_PATH);
   const text = await res.text();
   const parsed = Papa.parse(text, { header: true, dynamicTyping: true, skipEmptyLines: true });
+  // A exportação via Databricks grava valores nulos como a string literal
+  // "null" (em vez de campo vazio), o que o PapaParse não reconhece como
+  // ausência de valor. Normalizamos para null de verdade em todas as colunas.
+  for (const row of parsed.data) {
+    for (const key in row) {
+      if (row[key] === "null") row[key] = null;
+    }
+  }
   return parsed.data;
 }
 
@@ -127,6 +135,14 @@ function buildGerencial(rows, candidates) {
   );
   const avaliacoesIaPct = (rows.length ? (iaCount / rows.length) * 100 : 0);
 
+  // Custo estimado com a API da Anthropic (Claude) nas avaliações por IA.
+  // custo_usd só existe (não nulo) para avaliações gravadas a partir de
+  // 17/09/2026, quando o rastreamento de tokens/custo entrou no pipeline;
+  // avaliações por IA anteriores a essa data não têm custo recuperável.
+  const hasCusto = (v) => !(v === null || v === undefined || v === "");
+  const linhasComCusto = rows.filter((r) => hasCusto(r.custo_usd)).length;
+  const custoTotalUsd = rows.reduce((a, r) => a + (hasCusto(r.custo_usd) ? Number(r.custo_usd) : 0), 0);
+
   const tempoMedioMin =
     candidates.reduce((acc, c) => {
       if (!c.tempo_prova || c.tempo_prova === "—") return acc;
@@ -140,6 +156,8 @@ function buildGerencial(rows, candidates) {
     pontuacao_media: pontuacaoMedia,
     avaliacoes_ia: avaliacoesIaPct.toFixed(1).replace(".", ",") + "%",
     tempo_medio: `${Math.floor(tempoMedioMin / 60)}h ${String(Math.round(tempoMedioMin % 60)).padStart(2, "0")}min`,
+    custo_ia: "US$ " + custoTotalUsd.toFixed(2).replace(".", ","),
+    custo_ia_rastreado: linhasComCusto > 0,
   };
 
   // Avaliados por teste (contagem de candidatos distintos por nome_teste)
