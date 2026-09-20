@@ -429,9 +429,10 @@ table.detail td.score.low  { background: var(--state-error-tint);   color: var(-
 .candidate-body.active { display: block; }
 
 /* ---- Painel gerencial ---- */
+/* 6 cards de KPI: 3 colunas x 2 linhas fica mais equilibrado do que 5+1 órfão. */
 .kpi-row {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-3);
   margin-bottom: var(--space-4);
 }
