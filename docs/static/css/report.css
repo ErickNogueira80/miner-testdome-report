@@ -429,6 +429,11 @@ table.detail td.score.low  { background: var(--state-error-tint);   color: var(-
 .chart-card .area-path { fill: var(--state-info-tint); }
 .chart-card .dot { fill: var(--color-azul); }
 
+/* Cabeçalho enxuto exclusivo da impressão, com o logo da Miner (variante
+ * petróleo, para fundo claro). Fica oculto na tela; o cabeçalho normal
+ * (.report-header, escuro) é que aparece lá, e é ele que some no print. */
+.print-header { display: none; }
+
 /* Impressão: mostra só o resultado do candidato selecionado, compactado para
  * caber numa única página (paisagem, fontes/espaçamentos reduzidos e a
  * tabela sem corte horizontal). */
@@ -440,15 +445,26 @@ table.detail td.score.low  { background: var(--state-error-tint);   color: var(-
   .page { padding: 0; max-width: none; }
   body { font-size: 11px; }
 
+  .print-header {
+    display: flex;
+    align-items: center;
+    padding-bottom: var(--space-2);
+    margin-bottom: var(--space-2);
+    border-bottom: 1px solid var(--border-default);
+  }
+  .print-header img { height: 22px; display: block; }
+
   .id-row { padding: 0 0 var(--space-2); gap: var(--space-3); }
   .id-block .eyebrow { font-size: 10px; margin-bottom: 2px; }
   .id-block .name { font-size: 20px; }
 
+  /* Card de "Percentual de acerto" é o dado principal da impressão: fica
+   * maior; data/tempo (metadados) ficam menores para dar mais hierarquia. */
   .stat-row { gap: var(--space-2); margin-bottom: var(--space-2); }
   .card { padding: var(--space-2); }
   .card .label { font-size: 10px; margin-bottom: 2px; }
-  .card .value { font-size: 16px; }
-  .pill.pill-lg { font-size: 16px; padding: 1px 8px; }
+  .card .value { font-size: 13px; }
+  .pill.pill-lg { font-size: 24px; padding: 2px 12px; }
 
   .section-title { font-size: 10px; margin: 0 0 var(--space-1); }
   .skill-row { gap: var(--space-2); margin-bottom: var(--space-2); }
