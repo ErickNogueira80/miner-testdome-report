@@ -192,3 +192,119 @@ function buildGerencial(rows, candidates) {
 
   return { kpi, avaliadosPorTeste, avaliadosPorPeriodo, pontuacaoPorTeste, pontuacaoPorConhecimento };
 }
+
+/* ---- Nova visão do detalhamento individual: consolida o resultado do
+ * candidato por senioridade, por conhecimento técnico e no cruzamento dos
+ * dois, além de uma leitura automática do perfil resultante. ---- */
+
+const SENIORIDADE_ORDEM = ["Júnior", "Pleno", "Sênior", "Avançado"];
+
+/** Formata pontos com 1 casa decimal só quando necessário, usando vírgula
+ * (padrão BR), igual ao resto do site (ex.: custo_ia em buildGerencial). */
+function fmtPontos(n) {
+  const arred = Math.round(n * 10) / 10;
+  return Number.isInteger(arred) ? String(arred) : arred.toFixed(1).replace(".", ",");
+}
+
+/** Agrupa o detalhamento de um candidato (já calculado por buildCandidates)
+ * por uma chave qualquer, somando pontos esperados/realizados. Cada pergunta
+ * vale peso/10 pontos (a maioria dos testes usa peso=100, ou seja, 10 pontos
+ * por pergunta); "realizado" é esse valor ponderado pela pontuação (0-100%)
+ * obtida na pergunta. `ordem`, se informada, fixa a ordem das linhas; caso
+ * contrário elas saem ordenadas pelo total de pontos esperados (desc). */
+function agregarDesempenho(detalhamento, keyFn, ordem) {
+  const map = new Map();
+  for (const d of detalhamento) {
+    const key = keyFn(d);
+    const pts = d.peso / 10;
+    if (!map.has(key)) map.set(key, { esperado: 0, realizado: 0 });
+    const acc = map.get(key);
+    acc.esperado += pts;
+    acc.realizado += pts * (d.pontuacao / 100);
+  }
+
+  let entries = [...map.entries()];
+  if (ordem) {
+    entries.sort((a, b) => ordem.indexOf(a[0]) - ordem.indexOf(b[0]));
+  } else {
+    entries.sort((a, b) => b[1].esperado - a[1].esperado);
+  }
+
+  const linhas = entries.map(([nome, v]) => ({
+    nome,
+    esperado: v.esperado,
+    realizado: v.realizado,
+    pct: v.esperado ? roundHalfUp((v.realizado / v.esperado) * 100) : 0,
+  }));
+  const totalEsperado = linhas.reduce((a, l) => a + l.esperado, 0);
+  const totalRealizado = linhas.reduce((a, l) => a + l.realizado, 0);
+
+  return {
+    linhas,
+    total: {
+      esperado: totalEsperado,
+      realizado: totalRealizado,
+      pct: totalEsperado ? roundHalfUp((totalRealizado / totalEsperado) * 100) : 0,
+    },
+  };
+}
+
+/** Leitura automática do perfil do candidato a partir dos percentuais por
+ * conteúdo/senioridade. É uma heurística simples baseada só nos números —
+ * o CSV publicado não traz o texto das respostas nem o feedback da IA, então
+ * esse resumo não substitui uma leitura humana da prova. */
+function resumirPerfil(porSenioridade, porConteudo) {
+  if (!porConteudo.linhas.length) {
+    return { titulo: "—", foco: "Sem perguntas suficientes para uma leitura de perfil.", notasPorConteudo: [] };
+  }
+
+  function nivelDe(pct) {
+    if (pct >= 80) return "Domínio sólido, respostas consistentes.";
+    if (pct >= 60) return "Bom domínio, com alguns pontos a evoluir.";
+    if (pct >= 40) return "Conhecimento intermediário, com lacunas relevantes.";
+    return "Conhecimento inicial, precisa de desenvolvimento.";
+  }
+
+  const ordenadoPorPct = porConteudo.linhas.slice().sort((a, b) => b.pct - a.pct);
+  const melhor = ordenadoPorPct[0];
+  const fracos = ordenadoPorPct.filter((l) => l.pct < 50 && l.nome !== melhor.nome);
+
+  // Sobe de nível só enquanto os degraus anteriores também foram bem (>=60%):
+  // um Sênior bom com um Pleno fraco no meio conta como "nível Júnior", não
+  // como "Sênior" — não dá pra pular o degrau que falhou.
+  let nivelAlcancado = "iniciante";
+  for (const s of SENIORIDADE_ORDEM) {
+    const linha = porSenioridade.linhas.find((l) => l.nome === s);
+    if (linha && linha.pct >= 60) {
+      nivelAlcancado = s;
+    } else {
+      break;
+    }
+  }
+
+  const titulo = `Perfil ${nivelAlcancado} — foco em ${melhor.nome}`;
+  const foco = fracos.length
+    ? `Mais forte em ${melhor.nome}; ainda iniciante em ${fracos.map((f) => f.nome).join(" e ")}.`
+    : `Desempenho equilibrado entre as áreas avaliadas, com destaque para ${melhor.nome}.`;
+
+  const notasPorConteudo = porConteudo.linhas.map((l) => ({ nome: l.nome, pct: l.pct, nota: nivelDe(l.pct) }));
+
+  return { titulo, foco, notasPorConteudo };
+}
+
+function buildDesempenho(candidate) {
+  const porSenioridade = agregarDesempenho(candidate.detalhamento, (d) => d.senioridade, SENIORIDADE_ORDEM);
+  const porConteudo = agregarDesempenho(candidate.detalhamento, (d) => d.conhecimento);
+
+  // Cruzamento conteúdo x senioridade: mesma ordem de conteúdo da tabela
+  // acima e, dentro de cada um, a ordem natural de senioridade.
+  const combosOrdem = [];
+  for (const l of porConteudo.linhas) {
+    for (const s of SENIORIDADE_ORDEM) combosOrdem.push(l.nome + " / " + s);
+  }
+  const cruzado = agregarDesempenho(candidate.detalhamento, (d) => d.conhecimento + " / " + d.senioridade, combosOrdem);
+
+  const perfil = resumirPerfil(porSenioridade, porConteudo);
+
+  return { porSenioridade, porConteudo, cruzado, perfil };
+}
