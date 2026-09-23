@@ -448,6 +448,11 @@ table.detail tbody tr.total-row td {
 /* Espaçamento entre as tabelas empilhadas de desempenho consolidado */
 .perf-table { margin-bottom: var(--space-5); }
 
+/* Nas tabelas de desempenho consolidado (nova visão), "Pontos Esperados",
+ * "Pontos Realizados" e "%" ficam centralizados — diferente do detalhamento
+ * por pergunta (index.html), onde Peso/Pontuação continuam à direita. */
+.perf-table th.num, .perf-table td.num { text-align: center; }
+
 table.detail td.score {
   font-family: var(--font-mono);
   font-weight: 500;
