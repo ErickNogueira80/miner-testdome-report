@@ -364,6 +364,39 @@ a:hover { color: var(--link-hover); }
   color: var(--text-heading);
 }
 
+/* Variante do skill-card usada na "nova visão" do detalhamento individual,
+ * com uma nota qualitativa (heurística) abaixo do nome/percentual. */
+.skill-card.with-note {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2);
+}
+
+.skill-card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.skill-note {
+  font-size: var(--text-body-sm);
+  color: var(--text-muted);
+}
+
+/* Cards de texto (não numéricos) — usados no card "Perfil resultante" /
+ * "Foco principal" da nova visão, junto com o modificador de 2 colunas. */
+.stat-row.cols-2 { grid-template-columns: repeat(2, 1fr); }
+
+.card .text {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--text-body-md);
+  color: var(--text-heading);
+  line-height: var(--leading-normal);
+  margin: 0;
+}
+
 /* Question detail table */
 .table-wrap {
   background: var(--surface-card);
@@ -403,6 +436,17 @@ table.detail tbody td {
 table.detail tbody td.num { text-align: right; }
 
 table.detail tbody tr:last-child td { border-bottom: none; }
+
+/* Linha de total nas tabelas de desempenho consolidado (nova visão) */
+table.detail tbody tr.total-row td {
+  background: var(--neutral-50);
+  font-weight: 600;
+  color: var(--text-heading);
+  border-top: 2px solid var(--border-default);
+}
+
+/* Espaçamento entre as tabelas empilhadas de desempenho consolidado */
+.perf-table { margin-bottom: var(--space-5); }
 
 table.detail td.score {
   font-family: var(--font-mono);
