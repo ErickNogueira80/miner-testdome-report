@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Resultado de avaliação de candidato</title>
+<title>Resultado de avaliação de candidato — nova visão</title>
 <link rel="stylesheet" href="static/css/report.css?v=15">
 </head>
 <body>
@@ -29,8 +29,8 @@
   <aside class="side-nav">
     <nav class="side-nav-links">
       <a href="gerencial.html" class="side-nav-link">Painel gerencial</a>
-      <a href="index.html" class="side-nav-link active">Avaliações individuais</a>
-      <a href="avaliacao-v2.html" class="side-nav-link">Nova visão (beta)</a>
+      <a href="index.html" class="side-nav-link">Avaliações individuais</a>
+      <a href="avaliacao-v2.html" class="side-nav-link active">Nova visão (beta)</a>
     </nav>
     <hr class="side-nav-divider">
     <p class="filter-title">Nome do candidato</p>
@@ -67,29 +67,57 @@
       .replace(/"/g, "&quot;");
   }
 
-  function renderCandidateBody(c) {
-    var skillRow = c.resumo_skills.map(function (s) {
+  function renderTabela(titulo, colunaLabel, agregado) {
+    var linhasHtml = agregado.linhas.map(function (l) {
       return (
-        '<div class="skill-card">' +
-        '<span class="skill-name">' + escapeHtml(s.nome) + '</span>' +
-        '<span class="pill ' + s.tone + '">' + s.percentual + '%</span>' +
+        '<tr>' +
+          '<td>' + escapeHtml(l.nome) + '</td>' +
+          '<td class="num">' + fmtPontos(l.esperado) + '</td>' +
+          '<td class="num">' + fmtPontos(l.realizado) + '</td>' +
+          '<td class="num score ' + scoreTone(l.pct) + '">' + l.pct + '%</td>' +
+        '</tr>'
+      );
+    }).join("");
+
+    return (
+      '<p class="section-title">' + escapeHtml(titulo) + '</p>' +
+      '<div class="table-wrap perf-table"><table class="detail"><thead><tr>' +
+        '<th>' + escapeHtml(colunaLabel) + '</th><th class="num">Pontos Esperados</th>' +
+        '<th class="num">Pontos Realizados</th><th class="num">%</th>' +
+      '</tr></thead><tbody>' + linhasHtml +
+        '<tr class="total-row"><td>TOTAL</td>' +
+        '<td class="num">' + fmtPontos(agregado.total.esperado) + '</td>' +
+        '<td class="num">' + fmtPontos(agregado.total.realizado) + '</td>' +
+        '<td class="num">' + agregado.total.pct + '%</td></tr>' +
+      '</tbody></table></div>'
+    );
+  }
+
+  function renderPerfil(perfil) {
+    var notas = perfil.notasPorConteudo.map(function (n) {
+      return (
+        '<div class="skill-card with-note">' +
+          '<div class="skill-card-row">' +
+            '<span class="skill-name">' + escapeHtml(n.nome) + '</span>' +
+            '<span class="pill ' + scoreTone(n.pct) + '">' + n.pct + '%</span>' +
+          '</div>' +
+          '<span class="skill-note">' + escapeHtml(n.nota) + '</span>' +
         '</div>'
       );
     }).join("");
 
-    var rows = c.detalhamento.map(function (d, i) {
-      return (
-        '<tr>' +
-        '<td>' + (i + 1) + '</td>' +
-        '<td>' + escapeHtml(d.conhecimento) + '</td>' +
-        '<td>' + escapeHtml(d.pergunta) + '</td>' +
-        '<td>' + escapeHtml(d.senioridade) + '</td>' +
-        '<td>' + escapeHtml(d.tipo) + '</td>' +
-        '<td class="num">' + d.peso + '%</td>' +
-        '<td class="score num ' + d.tone + '">' + d.pontuacao + '%</td>' +
-        '</tr>'
-      );
-    }).join("");
+    return (
+      '<p class="section-title">Perfil resultante</p>' +
+      '<div class="stat-row cols-2">' +
+        '<div class="card"><p class="label">Perfil</p><p class="text">' + escapeHtml(perfil.titulo) + '</p></div>' +
+        '<div class="card"><p class="label">Foco principal</p><p class="text">' + escapeHtml(perfil.foco) + '</p></div>' +
+      '</div>' +
+      '<div class="skill-row">' + notas + '</div>'
+    );
+  }
+
+  function renderCandidateBody(c) {
+    var d = buildDesempenho(c);
 
     return (
       '<div class="candidate-body active" data-id="' + c.id + '">' +
@@ -102,14 +130,11 @@
         '<div class="card"><p class="label">Data da avaliação</p><p class="value">' + escapeHtml(c.data_avaliacao) + '</p></div>' +
         '<div class="card"><p class="label">Tempo de prova</p><p class="value">' + escapeHtml(c.tempo_prova) + '</p></div>' +
       '</div>' +
-      '<p class="section-title">Resumo por conhecimento técnico</p>' +
-      '<div class="skill-row">' + skillRow + '</div>' +
-      '<p class="section-title">Detalhamento por pergunta</p>' +
-      '<div class="table-wrap"><table class="detail"><thead><tr>' +
-        '<th>#</th><th>Conhecimento Técnico</th><th>Pergunta</th><th>Senioridade</th>' +
-        '<th>Tipo de Pergunta</th><th class="num">Peso</th><th class="num">Pontuação</th>' +
-      '</tr></thead><tbody>' + rows + '</tbody></table></div>' +
-      '<p class="footnote">Essa avaliação não substitui qualquer entrevista feita ou a ser realizada.</p>' +
+      renderTabela("Desempenho por senioridade", "Senioridade", d.porSenioridade) +
+      renderTabela("Desempenho por conhecimento técnico", "Conteúdo", d.porConteudo) +
+      renderTabela("Desempenho por conteúdo e senioridade", "Conteúdo / Senioridade", d.cruzado) +
+      renderPerfil(d.perfil) +
+      '<p class="footnote">Nova visão em avaliação — consolida os resultados por senioridade e conhecimento técnico, além de uma leitura automática do perfil resultante (heurística baseada só nos percentuais; o CSV publicado não traz o texto das respostas). Essa avaliação não substitui qualquer entrevista feita ou a ser realizada.</p>' +
       '</div>'
     );
   }
@@ -118,7 +143,7 @@
     var c = candidates.find(function (x) { return String(x.id) === String(id); });
     if (!c) return;
     document.getElementById("candidate-main").innerHTML = renderCandidateBody(c);
-    document.title = "Resultado de avaliação de candidato — " + c.nome;
+    document.title = "Resultado de avaliação de candidato — nova visão — " + c.nome;
   }
 
   /** Reconstrói as opções do <select> a partir de uma lista (já filtrada pela busca).
