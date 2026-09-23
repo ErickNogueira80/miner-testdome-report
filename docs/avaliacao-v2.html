@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Resultado de avaliação de candidato — nova visão</title>
-<link rel="stylesheet" href="static/css/report.css?v=15">
+<link rel="stylesheet" href="static/css/report.css?v=16">
 </head>
 <body>
 
@@ -93,29 +93,6 @@
     );
   }
 
-  function renderPerfil(perfil) {
-    var notas = perfil.notasPorConteudo.map(function (n) {
-      return (
-        '<div class="skill-card with-note">' +
-          '<div class="skill-card-row">' +
-            '<span class="skill-name">' + escapeHtml(n.nome) + '</span>' +
-            '<span class="pill ' + scoreTone(n.pct) + '">' + n.pct + '%</span>' +
-          '</div>' +
-          '<span class="skill-note">' + escapeHtml(n.nota) + '</span>' +
-        '</div>'
-      );
-    }).join("");
-
-    return (
-      '<p class="section-title">Perfil resultante</p>' +
-      '<div class="stat-row cols-2">' +
-        '<div class="card"><p class="label">Perfil</p><p class="text">' + escapeHtml(perfil.titulo) + '</p></div>' +
-        '<div class="card"><p class="label">Foco principal</p><p class="text">' + escapeHtml(perfil.foco) + '</p></div>' +
-      '</div>' +
-      '<div class="skill-row">' + notas + '</div>'
-    );
-  }
-
   function renderCandidateBody(c) {
     var d = buildDesempenho(c);
 
@@ -133,8 +110,7 @@
       renderTabela("Desempenho por senioridade", "Senioridade", d.porSenioridade) +
       renderTabela("Desempenho por conhecimento técnico", "Conteúdo", d.porConteudo) +
       renderTabela("Desempenho por conteúdo e senioridade", "Conteúdo / Senioridade", d.cruzado) +
-      renderPerfil(d.perfil) +
-      '<p class="footnote">Nova visão em avaliação — consolida os resultados por senioridade e conhecimento técnico, além de uma leitura automática do perfil resultante (heurística baseada só nos percentuais; o CSV publicado não traz o texto das respostas). Essa avaliação não substitui qualquer entrevista feita ou a ser realizada.</p>' +
+      '<p class="footnote">Nova visão em avaliação — consolida os resultados por senioridade e conhecimento técnico. Essa avaliação não substitui qualquer entrevista feita ou a ser realizada.</p>' +
       '</div>'
     );
   }
